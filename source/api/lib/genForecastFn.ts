@@ -92,13 +92,14 @@ export async function handler(event?: any, context?: any) {
         TimeSeriesIdentifiers: {
           DataSource: {
             S3Config: {
-              Path: testIdsUri,
-              RoleArn: process.env.SERVICE_ROLE_ARN,
+              Path: "s3://your-bucket/path/to/data.csv",
+              RoleArn: process.env.YOUR_ROLE_ARN,
             },
           },
           Format: "CSV",
           Schema: {
-            Attributes: [{ AttributeName: "item_id", AttributeType: "string" }],
+            // Cast the AttributeType value as a literal
+            Attributes: [{ AttributeName: "item_id", AttributeType: "string" as const }],
           },
         },
       },

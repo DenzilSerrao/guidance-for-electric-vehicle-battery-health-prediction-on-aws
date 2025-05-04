@@ -22,7 +22,7 @@ import {v4 as uuidv4} from "uuid";
 import {APIService, PipelineRequestInput} from "../../services/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
-import {Auth} from "aws-amplify";
+import Auth from '@aws-amplify/auth';
 import {forkJoin} from "rxjs";
 import {DatasetSelectionComponent} from "./components/dataset-selection/dataset-selection.component";
 import {PluginSelectionComponent} from "./components/plugin-selection/plugin-selection.component";
@@ -73,7 +73,7 @@ export class PipelineComponent {
   async createPipeline() {
     this.displayText = "Creating Pipeline...";
     this.showSpinner = true;
-    const userInfo = await Auth.currentUserInfo();
+    const userInfo = await Auth.getCurrentUser();
     const userName = userInfo.username.split('@')[0];
     let pipelineId = this.pipelineId ?? uuidv4();
     pipelineId = pipelineId.split("-")[0];

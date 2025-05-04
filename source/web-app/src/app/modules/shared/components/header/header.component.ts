@@ -15,7 +15,7 @@
 
 import {Component, OnInit} from "@angular/core";
 import {AuthService} from "../../../../services/auth.service";
-import {Auth} from "aws-amplify";
+import Auth from "@aws-amplify/auth";
 import {faUser} from "@fortawesome/free-solid-svg-icons";
 import {UserPreferenceService} from "../../../../services/user-preference.service";
 import {Router} from "@angular/router";
@@ -46,10 +46,10 @@ export class HeaderComponent implements OnInit {
     constructor(private authService: AuthService, public userPrefService: UserPreferenceService, private router: Router) {}
 
     ngOnInit(): void {
-        this.authService.getLoginStatus().then(async (status) => {
+        this.authService.fetchSessionStatus().then(async (status: boolean) => {
             this.isLoggedIn = status;
             if (this.isLoggedIn) {
-                const userInfo = await Auth.currentUserInfo();
+                const userInfo = await (Auth as any).currentAuthenticatedUser();
                 this.userName = userInfo.username;
             }
         });

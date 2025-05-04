@@ -16,7 +16,8 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 import { Injectable } from "@angular/core";
-import API, { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
+import { GraphQLAPI, graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
+import { Amplify } from "aws-amplify";
 import { Observable } from "zen-observable-ts";
 
 export interface SubscriptionResponse<T> {
@@ -279,8 +280,12 @@ export class APIService {
     const gqlAPIServiceArguments: any = {
       input
     };
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
+    const response = (await GraphQLAPI.graphql(
+      Amplify as any,
+      {
+        query: statement,
+        variables: gqlAPIServiceArguments,
+      }
     )) as any;
     return <PipelineMutation>response.data.pipeline;
   }
@@ -319,8 +324,12 @@ export class APIService {
     const gqlAPIServiceArguments: any = {
       UserId
     };
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
+    const response = (await GraphQLAPI.graphql(
+      Amplify as any,
+      {
+        query: statement,
+        variables: gqlAPIServiceArguments,
+      }
     )) as any;
     return <Array<GetPipelinesByUserQuery>>response.data.getPipelinesByUser;
   }
@@ -357,8 +366,12 @@ export class APIService {
     const gqlAPIServiceArguments: any = {
       Id
     };
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
+    const response = (await GraphQLAPI.graphql(
+      Amplify as any,
+      {
+        query: statement,
+        variables: gqlAPIServiceArguments,
+      }
     )) as any;
     return <GetPipelineByIdQuery>response.data.getPipelineById;
   }
@@ -397,8 +410,12 @@ export class APIService {
     const gqlAPIServiceArguments: any = {
       PostProcessingId
     };
-    const response = (await API.graphql(
-      graphqlOperation(statement, gqlAPIServiceArguments)
+    const response = (await GraphQLAPI.graphql(
+      Amplify as any,
+      {
+        query: statement,
+        variables: gqlAPIServiceArguments,
+      }
     )) as any;
     return <Array<GetPipelineByProcessingIdQuery>>(
       response.data.getPipelineByProcessingId
@@ -416,12 +433,15 @@ export class APIService {
           VIN
         }
       }`;
-    const response = (await API.graphql(graphqlOperation(statement))) as any;
+      const response = (await GraphQLAPI.graphql(
+        Amplify as any,
+        graphqlOperation(statement)
+      )) as any;
     return <Array<GetLocationDataQuery>>response.data.getLocationData;
   }
-  PipelineSubListener: Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, "pipelineSub">>
-  > = API.graphql(
+  PipelineSubListener: Observable<SubscriptionResponse<Pick<__SubscriptionContainer, "pipelineSub">>> =
+  GraphQLAPI.graphql(
+    Amplify as any,
     graphqlOperation(
       `subscription PipelineSub {
         pipelineSub {
@@ -453,7 +473,4 @@ export class APIService {
         }
       }`
     )
-  ) as Observable<
-    SubscriptionResponse<Pick<__SubscriptionContainer, "pipelineSub">>
-  >;
-}
+  ) as unknown as Observable<SubscriptionResponse<Pick<__SubscriptionContainer, "pipelineSub">>>};

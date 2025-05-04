@@ -24,7 +24,7 @@ import {forkJoin} from "rxjs";
 import AnnotationsModule from 'highcharts/modules/annotations';
 import SolidGauge from 'highcharts/modules/solid-gauge';
 import HC_more from "highcharts/highcharts-more";
-import {Auth} from "aws-amplify";
+import Auth from '@aws-amplify/auth';
 
 AnnotationsModule(Highcharts);
 HC_more(Highcharts);
@@ -346,7 +346,7 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        Auth.currentUserInfo().then(user => {
+        Auth.getCurrentUser().then(user => {
             this.username = user.username.split('@')[0];
             if (!this.pipelineId) {
                 this.apiService.GetPipelinesByUser(this.username).then((pipelines: GetPipelinesByUserQuery[]) => {

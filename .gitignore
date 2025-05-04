@@ -1,6 +1,6 @@
 ### vsCode ###
 .vscode
-
+.venv
 ### macOS ###
 # General
 .DS_Store

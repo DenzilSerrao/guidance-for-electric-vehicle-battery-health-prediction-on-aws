@@ -13,52 +13,53 @@
  * permissions and limitations under the License.
  */
 
-import {APP_INITIALIZER, NgModule} from "@angular/core";
-import {BrowserModule} from "@angular/platform-browser";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import {AppRoutingModule} from "./app-routing.module";
-import {AppComponent} from "./app.component";
-import {AmplifyAuthenticatorModule} from "@aws-amplify/ui-angular";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {AuthInterceptor} from "./interceptor/auth.interceptor";
-import {ConfigService} from "./services/config.service";
-import {environment} from "../environments/environment";
-import {Amplify} from "aws-amplify";
-import {map} from "rxjs";
-import {AuthService} from "./services/auth.service";
-import {SharedModule} from "./modules/shared/shared.module";
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HighchartsChartModule} from "highcharts-angular";
-import {LoginComponent} from "./components/login/login.component";
-import {PipelineComponent} from "./components/pipeline/pipeline.component";
-import {DashboardComponent} from "./components/dashboard/dashboard.component";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {TrackerComponent} from './components/tracker/tracker.component';
-import {IndicatorComponent} from './components/dashboard/components/indicator/indicator.component';
-import {MatSelectModule} from "@angular/material/select";
-import {HistoryComponent} from './components/history/history.component';
-import {MatTableModule} from "@angular/material/table";
-import {BatteryChargeComponent} from './components/dashboard/components/battery-charge/battery-charge.component';
-import {MapComponent} from './components/map/map.component';
-import {MatInputModule} from "@angular/material/input";
-import {MatIconModule} from "@angular/material/icon";
-import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { AuthInterceptor } from "./interceptor/auth.interceptor";
+import { ConfigService } from "./services/config.service";
+import { environment } from "../environments/environment";
+import { Amplify } from "aws-amplify";
+import { map } from "rxjs";
+import { AuthService } from "./services/auth.service";
+import { SharedModule } from "./modules/shared/shared.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HighchartsChartModule } from "highcharts-angular";
+import { LoginComponent } from "./components/login/login.component";
+import { PipelineComponent } from "./components/pipeline/pipeline.component";
+import { DashboardComponent } from "./components/dashboard/dashboard.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TrackerComponent } from './components/tracker/tracker.component';
+import { IndicatorComponent } from './components/dashboard/components/indicator/indicator.component';
+import { MatSelectModule } from "@angular/material/select";
+import { HistoryComponent } from './components/history/history.component';
+import { MatTableModule } from "@angular/material/table";
+import { BatteryChargeComponent } from './components/dashboard/components/battery-charge/battery-charge.component';
+import { MapComponent } from './components/map/map.component';
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DatasetSelectionComponent } from './components/pipeline/components/dataset-selection/dataset-selection.component';
 import { TabsComponent } from './components/pipeline/components/tabs/tabs.component';
 import { PluginSelectionComponent } from './components/pipeline/components/plugin-selection/plugin-selection.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 function getMapInfo(config: any) {
     const geo: any = {
-            AmazonLocationService: {
-              maps: {
+        AmazonLocationService: {
+            maps: {
                 items: {
                 },
                 default: config.mapName,
-              },
-              region: config.region,
             },
-          };
+            region: config.region,
+        },
+    };
     geo.AmazonLocationService.maps.items[config.mapName] = {
         style: 'VectorEsriNavigation',
     }
@@ -77,26 +78,27 @@ function appInitializer(metadataService: ConfigService, authService: AuthService
                 // Amplify.Logger.LOG_LEVEL = "DEBUG";
                 Amplify.configure({
                     Auth: {
-                        mandatorySignIn: true,
-                        region: environment.NG_APP_REGION,
-                        userPoolId: environment.NG_APP_USER_POOL_ID,
-                        identityPoolId: environment.NG_APP_IDENTITY_POOL_ID,
-                        userPoolWebClientId: environment.NG_APP_APP_CLIENT_ID,
-                    },
+                      mandatorySignIn: true,
+                      region: environment.NG_APP_REGION,
+                      userPoolId: environment.NG_APP_USER_POOL_ID,
+                      identityPoolId: environment.NG_APP_IDENTITY_POOL_ID,
+                      userPoolWebClientId: environment.NG_APP_APP_CLIENT_ID,
+                    } as any, // cast to any to allow custom properties
+                    Storage: {
+                      AWSS3: {
+                        bucket: config.libraryBucket,
+                        region: config.region,
+                        customPrefix: {
+                          public: ''
+                        }
+                      }
+                    } as any // cast to any to allow custom storage configuration
+                  } as any); // cast the entire object to any to bypass type checking
+                (Amplify as any).configure({
                     aws_appsync_graphqlEndpoint: config.graphqlEndpoint,
                     aws_appsync_region: config.region,
                     aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
                     aws_appsync_apiKey: config.graphqlApiKey,
-                    Storage: {
-                        AWSS3: {
-                            bucket: config.libraryBucket,
-                            region: config.region,
-                            customPrefix: {
-                                public: ''
-                            }
-                        }
-                    },
-                    geo: getMapInfo(config)
                 });
                 // Set session when user is logged in but refreshed the page
                 authService.setCurrentSession();
@@ -136,6 +138,7 @@ function appInitializer(metadataService: ConfigService, authService: AuthService
         MatIconModule,
         MatPaginatorModule,
         MatCheckboxModule,
+        MatFormFieldModule,
     ],
     providers: [
         {
@@ -144,7 +147,7 @@ function appInitializer(metadataService: ConfigService, authService: AuthService
             multi: true,
             deps: [ConfigService, AuthService],
         },
-        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ],
     bootstrap: [AppComponent],
 })

@@ -18,8 +18,7 @@ import {APIService, GetPipelinesByUserQuery} from "../../services/api.service";
 import {PipelineStatus} from "../../models/pipeline-status";
 import {faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {Router} from "@angular/router";
-import {Auth} from "aws-amplify";
-
+import Auth from '@aws-amplify/auth';
 @Component({
     selector: 'app-history',
     templateUrl: './history.component.html',
@@ -52,7 +51,7 @@ export class HistoryComponent implements OnInit {
 
     ngOnInit(): void {
         this.showSpinner = true;
-        Auth.currentUserInfo().then(user => {
+        Auth.getCurrentUser().then((user: { username: string; }) => {
             const username = user.username.split('@')[0];
             this.apiService.GetPipelinesByUser(username).then((data: GetPipelinesByUserQuery[]) => {
                 this.pipelineData = data.map(d => {

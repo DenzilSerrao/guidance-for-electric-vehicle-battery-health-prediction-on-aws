@@ -61,7 +61,7 @@ export class TrackerComponent implements OnInit {
                     this.getPipelineInfo();
                 }
             }
-        }, (err) => {
+        }, (err: any) => {
             this.showError = true;
             console.log(err);
         });
